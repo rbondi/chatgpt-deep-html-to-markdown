@@ -1,5 +1,49 @@
-1. Put your input HTML file into inputs/.
-2. Run convert.sh with two arguments: the file in inputs, and what your want the converted markdown file named (without the .md prefix)
-3. When done, the converted file is in outputs/ with the prefix `out-`.
+# chatgpt-deep-html-to-markdown
 
-You may have to clean up stray DIVs in the output.
+A simple HTML-to-Markdown pipeline using Pandoc and Lua filters, designed for cleaning up machine-generated HTML and producing cleaner, footnoted Markdown.
+
+TODO: Add instructions about how to grab the HTML using Chrome after a deep research.
+
+## 🚀 Setup (First Time Only)
+
+To create a fresh virtual environment and install all dependencies:
+
+```
+make setup
+```
+
+This will:
+- Create a Python virtual environment in `venv/`
+- Install dependencies from `requirements.txt`
+- Create the required `inputs/` and `outputs/` directories
+- Preserve those directories in Git (via `.gitkeep` files)
+
+## 🛠 Usage
+
+1. Put your input HTML file into `inputs/`.
+2. Run `convert.sh` with two arguments:  
+   - the filename in `inputs/`  
+   - the desired output name (without `.md`)
+
+   Example:
+   ```
+   ./convert.sh myfile.html converted-name
+   ```
+
+3. When done, the converted file will be in `outputs/` with the prefix `out-`, e.g., `outputs/out-converted-name.md`.
+
+You may have to clean up stray `<div>` elements in the output manually.
+
+## 🧹 Maintenance
+
+- To regenerate the dependency list:
+
+  ```
+  make freeze
+  ```
+
+- To delete the environment and temporary files:
+
+  ```
+  make clean
+  ```
