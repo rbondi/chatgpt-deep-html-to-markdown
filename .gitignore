@@ -4,3 +4,5 @@ inputs/*
 outputs/*
 !outputs/.gitkeep
 
+venv/*
+!venv/.gitkeep

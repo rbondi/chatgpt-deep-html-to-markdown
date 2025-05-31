@@ -1,0 +1,14 @@
+beautifulsoup4==4.13.4
+certifi==2025.4.26
+charset-normalizer==3.4.2
+cloudscraper==1.2.71
+idna==3.10
+lxml==5.4.0
+pyparsing==3.2.3
+PyPDF2==3.0.1
+requests==2.32.3
+requests-toolbelt==1.0.0
+resources==0.0.1
+soupsieve==2.7
+typing_extensions==4.13.2
+urllib3==2.4.0
