@@ -27,7 +27,7 @@ if [[ "$INPUT_FILE" != inputs/* ]]; then
 fi
 
 # Check that required directories already exist
-PIPELINE_DIR="./inputs/pipeline_files"
+PIPELINE_DIR="./pipeline_files"
 OUTPUT_DIR="./outputs"
 
 if [[ ! -d "$PIPELINE_DIR" ]]; then
