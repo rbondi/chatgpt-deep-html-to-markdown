@@ -1,46 +1,38 @@
 #!/bin/bash
 
 # -----------------------------------------------------------------------------
-# Script: run_pandoc_pipeline.sh
-# Purpose: Process an HTML file through a cleaning pipeline and convert it to Markdown
-#          using custom preprocessing, Lua filtering, and postprocessing of footnotes.
-# Date: 2025-05-31
+# Script: convert.sh
+# Purpose: Process an HTML file in ./inputs/ through a pipeline and convert it to Markdown
+#          using custom preprocessing, Lua filtering, and footnote postprocessing.
+# Updated: 2025-06-22 - Simplified to require only one argument (filename.html)
 # -----------------------------------------------------------------------------
 
-# Exit on error
 set -e
 
-# Get arguments
-INPUT_FILE="$1"
-OUTPUT_PREFIX="$2"
+# --- Parse single argument ---
+BASENAME="$1"
 
-# Validate arguments
-if [[ -z "$INPUT_FILE" || -z "$OUTPUT_PREFIX" ]]; then
-  echo "Usage: $0 input_file output_prefix"
+if [[ -z "$BASENAME" ]]; then
+  echo "Usage: $0 filename.html"
   exit 1
 fi
 
-# Ensure INPUT_FILE is in ./inputs/
-if [[ "$INPUT_FILE" != inputs/* ]]; then
-  echo "Error: Input file must be in the './inputs' directory."
+INPUT_FILE="inputs/$BASENAME"
+OUTPUT_PREFIX="${BASENAME%.html}"
+
+if [[ ! -f "$INPUT_FILE" ]]; then
+  echo "Error: Input file '$INPUT_FILE' not found in ./inputs/"
   exit 1
 fi
 
-# Check that required directories already exist
+# --- Validate required directories ---
 PIPELINE_DIR="./pipeline_files"
 OUTPUT_DIR="./outputs"
 
-if [[ ! -d "$PIPELINE_DIR" ]]; then
-  echo "Error: Required directory '$PIPELINE_DIR' does not exist."
-  exit 1
-fi
+[[ -d "$PIPELINE_DIR" ]] || { echo "Error: '$PIPELINE_DIR' does not exist."; exit 1; }
+[[ -d "$OUTPUT_DIR" ]]   || { echo "Error: '$OUTPUT_DIR' does not exist."; exit 1; }
 
-if [[ ! -d "$OUTPUT_DIR" ]]; then
-  echo "Error: Required directory '$OUTPUT_DIR' does not exist."
-  exit 1
-fi
-
-# Activate Python virtual environment if not already active
+# --- Activate Python virtual environment ---
 if [[ -z "$VIRTUAL_ENV" ]]; then
   if [[ -d "venv" ]]; then
     echo "Activating Python virtual environment: venv"
@@ -70,9 +62,8 @@ FINAL_MD_TEMP="${PIPELINE_DIR}/out-${OUTPUT_PREFIX}.md"
 python footnote_title_replacer.py "$RAW_MD" "$FINAL_MD_TEMP" --cloudscraper
 echo "[Step 3/4] Done: Footnotes processed into $FINAL_MD_TEMP"
 
-# --- Step 4: Save final output, handling existing file if needed ---
+# --- Step 4: Save final output, handle overwrite ---
 echo "[Step 4/4] Saving final Markdown to ./outputs..."
-
 FINAL_MD_DEST="${OUTPUT_DIR}/out-${OUTPUT_PREFIX}.md"
 if [[ -f "$FINAL_MD_DEST" ]]; then
   timestamp=$(date +"%Y-%m-%d-%H-%M")
