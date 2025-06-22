@@ -4,5 +4,8 @@ inputs/*
 outputs/*
 !outputs/.gitkeep
 
+pipeline_files/*
+!pipeline_files/.gitkeep
+
 venv/*
 !venv/.gitkeep
